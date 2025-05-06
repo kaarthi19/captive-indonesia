@@ -138,8 +138,6 @@ function input_data(filepath)
     #industrial park generators set
     IP_G = ip_generators.R_ID;
 
-    
-
     #Industrial Park Demand
     if isfile(joinpath(filepath, "ip_demand.csv"))
         ip_demand_input = DataFrame(CSV.File(joinpath(filepath, "ip_demand.csv")));
@@ -159,6 +157,12 @@ function input_data(filepath)
     else
         ip_demand = DataFrame(
             r_id = Int[]
+        )
+
+        nse_ip = DataFrame(
+            Segment = Int[],
+            NSE_Cost = Float64[],
+            NSE_Max = Float64[]
         )
     end
 
