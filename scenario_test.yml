@@ -1,0 +1,24 @@
+# scenarios.yml
+islands:
+  - sumatera
+
+years:
+  - "2030"
+
+scenarios:
+  - base
+
+cleans:
+  - reference
+
+# per‑island baseline BAU CO₂ emissions
+island_params:
+  sumatera: 86780000
+
+# per‑year, per‑island CO2_limit values
+co2_limits:
+  "2030":
+    sumatera: 86780000
+
+  "2035":
+    sumatera: 60500000

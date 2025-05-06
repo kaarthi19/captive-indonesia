@@ -48,7 +48,7 @@ end
 
 # 3) paths
 base_dir     = @__DIR__
-inputs_path  = joinpath(base_dir, "data", island, year)
+inputs_path  = joinpath(base_dir, "data_indonesia", year, island)
 results_root = joinpath(base_dir, "results")
 mkpath(results_root)
 
@@ -56,12 +56,10 @@ job_name    = "$(scenario)_$(island)_$(year)_$(clean)"
 results_dir = joinpath(results_root, job_name)
 mkpath(results_dir)
 
-results_file = joinpath(results_dir, "results.csv")
-
 # 4) run compiler, passing new parameters
 function_compiler(
     inputs_path,
-    results_file,
+    results_dir,
     mipgap,
     CO2_constraint,
     CO2_limit,

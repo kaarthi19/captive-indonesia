@@ -14,6 +14,10 @@
 #SBATCH --mail-type END     #send mail when job ends
 #SBATCH --mail-user <kagnapathy@ucsd.edu> #send mail to this address
 
-julia ../run_model.jl
+# absolute path to your project root:
+PROJECT_ROOT=/tscc/nfs/home/kagnapathy/captive-indonesia
+
+# invoke Julia on the absolute run_model.jl, giving it the local config.json
+julia $PROJECT_ROOT/run_model.jl config.json
 
 exit 0
