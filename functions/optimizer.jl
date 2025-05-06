@@ -1,4 +1,4 @@
-function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constraint, RE_limit, Grid, Captive, ImportPrice, NoCoal)
+function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constraint, RE_limit, Grid, Captive, ImportPrice, NoCoal, CO235reduction, BAUCO2emissions)
 
     CE = Model(Gurobi.Optimizer)
     set_attribute(CE, "MIPGap", mipgap)
@@ -528,9 +528,13 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
     
     if CO2_constraint
         #setting CO2 emissions constraint to 290 as per JETP agreement
-        @constraint(CE, cCO2EmissionsTotal, eCO2EmissionsGrid + eCO2EmissionsIP <= CO2_limit);
+        @constraint(CE, cCO2EmissionsGrid, eCO2EmissionsGrid <= CO2_limit);
     end
 
+    if CO235reduction
+        #setting CO2 emissions constraint to 235 as per JETP agreement
+        @constraint(CE, cCO2EmissionsIP,  eCO2EmissionsIP <= BAUCO2emissions);
+    end
 
     #renewable energy share
     @expression(CE, eREShare, 
