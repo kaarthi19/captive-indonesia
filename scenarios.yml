@@ -1,0 +1,12 @@
+# scenarios.yml
+islands:
+  - sumatera
+
+years:
+  - "2030"
+
+scenarios:
+  - base
+
+cleans:
+  - reference

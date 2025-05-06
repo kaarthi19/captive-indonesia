@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+#SBATCH -J model            #change this for job name
+#SBATCH -q condo            #partition name
+#SBATCH -p condo            #QOS name
+#SBATCH -N 1                #number of nodes
+#SBATCH -n 1                #number of tasks
+#SBATCH -c 36               #number of cpus per task
+#SBATCH -t 6-23:59:00       #wall time limit
+#SBATCH -o model-%j.out-%N  #output file
+#SBATCH -e model-%j.err-%N  #error file
+#SBATCH --exclude tscc-13-[9-12] #excludes specific nodes that cannot run julia
+#SBATCH -A csd769           #allocation name, always csd769
+#SBATCH --mail-type END     #send mail when job ends
+#SBATCH --mail-user <kagnapathy@ucsd.edu> #send mail to this address
+
+julia ../run_model.jl
+
+exit 0
