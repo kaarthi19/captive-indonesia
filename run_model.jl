@@ -22,7 +22,7 @@ CO2_limit         = cfg["CO2_limit"]
 mipgap         = 0.01
 CO2_constraint = false
 RE_constraint  = false
-RE_limit       = 0.0
+RE_limit       = 0.34
 
 # scenario toggles
 if scenario == "base"
