@@ -2,7 +2,7 @@
 using JSON
 
 # core model logic
-include(joinpath(@__DIR__, "function_compiler.jl"))
+include(joinpath(@__DIR__, "functions/function_compiler.jl"))
 
 # 1) load scenario config
 cfg               = JSON.parsefile("config.json")
