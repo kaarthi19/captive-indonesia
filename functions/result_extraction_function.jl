@@ -1,21 +1,35 @@
+# result_extraction_function.jl
+
 using CSV
 using DataFrames
-import Base.Filesystem: dirname, mkpath
+import Base.Filesystem: mkpath
 
-function result_extraction(solution, demand, inputs, input_path, results_filepath)
-    # 1) Compute generation aggregates
-    generation = zeros(size(inputs.G,1))
-    for i in 1:size(inputs.G,1)
+function result_extraction(
+        solution,
+        demand::DataFrame,
+        inputs,
+        input_path::AbstractString,
+        results_dir::AbstractString
+    )
+    # 0) ensure output folder exists
+    mkpath(results_dir)
+
+    # 1) Compute generation totals
+    NG = size(inputs.G, 1)
+    generation = zeros(NG)
+    for i in 1:NG
         generation[i] = sum(value.(solution.GEN)[:, inputs.G[i]].data)
     end
 
-    ip_generation = zeros(size(inputs.IP_G,1))
-    for i in 1:size(inputs.IP_G,1)
+    NIPG = size(inputs.IP_G, 1)
+    ip_generation = zeros(NIPG)
+    for i in 1:NIPG
         ip_generation[i] = sum(value.(solution.IP_GEN)[:, inputs.IP_G[i]].data)
     end
 
-    ip_heat_generation = zeros(size(inputs.IP_UC,1))
-    for i in 1:size(inputs.IP_UC,1)
+    NIPUC = size(inputs.IP_UC, 1)
+    ip_heat_generation = zeros(NIPUC)
+    for i in 1:NIPUC
         ip_heat_generation[i] = sum(value.(solution.IP_GEN_HEAT)[:, inputs.IP_UC[i]].data)
     end
 
@@ -24,7 +38,7 @@ function result_extraction(solution, demand, inputs, input_path, results_filepat
     MWh_share    = generation ./ total_demand .* 100
     cap_share    = value.(solution.CAP).data ./ peak_demand .* 100
 
-    # 2) Build your DataFrames
+    # 2) Build DataFrames…
     generator = DataFrame(
         ID             = inputs.G,
         Resource       = inputs.generators.Resource[inputs.G],
@@ -66,13 +80,12 @@ function result_extraction(solution, demand, inputs, input_path, results_filepat
         GWh        = ip_heat_generation ./ 1000
     )
 
-    # 3) Industrial‐park imports
     if all(value.(solution.IP_IMPORT) .== 0)
         ip_import = DataFrame(
-            ID              = inputs.IP,
-            Zone            = inputs.ip_generators.Zone[inputs.IP],
+            ID               = inputs.IP,
+            Zone             = inputs.ip_generators.Zone[inputs.IP],
             Total_Import_MWh = zeros(length(inputs.IP)),
-            Peak_Import_MW  = zeros(length(inputs.IP)),
+            Peak_Import_MW   = zeros(length(inputs.IP)),
         )
     else
         ip_import = DataFrame(
@@ -83,7 +96,6 @@ function result_extraction(solution, demand, inputs, input_path, results_filepat
         )
     end
 
-    # 4) Storage
     storage = DataFrame(
         ID                    = inputs.STOR,
         Zone                  = inputs.generators.Zone[inputs.STOR],
@@ -102,24 +114,23 @@ function result_extraction(solution, demand, inputs, input_path, results_filepat
         Change_in_Storage_MWh = value.(solution.IP_E_CAP).data .- inputs.ip_generators.Existing_Cap_MW[inputs.IP_STOR],
     )
 
-    # 5) Transmission
     transmission = DataFrame(
-        ID                      = inputs.L,
-        Path                    = inputs.lines.path_name[inputs.L],
-        Substation_Path         = inputs.lines.substation_path[inputs.L],
-        Total_Transfer_Capacity = value.(solution.T_CAP).data,
-        Start_Transfer_Capacity = inputs.lines.Line_Max_Flow_MW,
+        ID                       = inputs.L,
+        Path                     = inputs.lines.path_name[inputs.L],
+        Substation_Path          = inputs.lines.substation_path[inputs.L],
+        Total_Transfer_Capacity  = value.(solution.T_CAP).data,
+        Start_Transfer_Capacity  = inputs.lines.Line_Max_Flow_MW,
         Change_in_Transfer_Capacity = value.(solution.T_CAP).data .- inputs.lines.Line_Max_Flow_MW,
     )
 
-    # 6) Non‐served energy (system and IP)
-    total_demand = sum(sum.(eachcol(demand)))
-    num_s       = maximum(inputs.S)
-    num_z       = maximum(inputs.Z)
+    num_s = maximum(inputs.S)
+    num_z = maximum(inputs.Z)
     nse_r = DataFrame(
-        Segment = Int[], Zone = Int[],
-        NSE_Price = Float64[],
-        Max_NSE_MW = Float64[], Total_NSE_MWh = Float64[],
+        Segment               = Int[],
+        Zone                  = Int[],
+        NSE_Price             = Float64[],
+        Max_NSE_MW            = Float64[],
+        Total_NSE_MWh         = Float64[],
         NSE_Percent_of_Demand = Float64[]
     )
     for s in inputs.S, z in inputs.Z
@@ -132,12 +143,13 @@ function result_extraction(solution, demand, inputs, input_path, results_filepat
             sum(value.(solution.NSE)[:, s, z].data) / total_demand * 100
         ))
     end
-    
-    #num_ip = maximum(inputs.IP)
+
     nse_r_ip = DataFrame(
-        Segment = Int[], Zone = Int[],
-        NSE_Price = Float64[],
-        Max_NSE_MW = Float64[], Total_NSE_MWh = Float64[],
+        Segment               = Int[],
+        Zone                  = Int[],
+        NSE_Price             = Float64[],
+        Max_NSE_MW            = Float64[],
+        Total_NSE_MWh         = Float64[],
         NSE_Percent_of_Demand = Float64[]
     )
     for s in inputs.S, ip in inputs.IP
@@ -151,15 +163,14 @@ function result_extraction(solution, demand, inputs, input_path, results_filepat
         ))
     end
 
-    # 7) Costs & clean energy
     cost = DataFrame(
-        Total_Costs               = solution.cost / 1e6,
-        Fixed_Costs_Generation    = value.(solution.FixedCostsGeneration) / 1e6,
-        Fixed_Costs_Transmission  = value.(solution.FixedCostsTransmission) / 1e6,
-        Variable_Costs_Grid       = value.(solution.VariableCostsGrid) / 1e6,
-        Variable_Costs_IP         = value.(solution.VariableCostsIP) / 1e6,
-        NSE_Costs                 = value.(solution.NSECosts) / 1e6,
-        Grid_Import_Costs         = value.(solution.GridImportCosts) / 1e6
+        Total_Costs              = solution.cost / 1e6,
+        Fixed_Costs_Generation   = value.(solution.FixedCostsGeneration) / 1e6,
+        Fixed_Costs_Transmission = value.(solution.FixedCostsTransmission) / 1e6,
+        Variable_Costs_Grid      = value.(solution.VariableCostsGrid) / 1e6,
+        Variable_Costs_IP        = value.(solution.VariableCostsIP) / 1e6,
+        NSE_Costs                = value.(solution.NSECosts) / 1e6,
+        Grid_Import_Costs        = value.(solution.GridImportCosts) / 1e6
     )
 
     clean_energy = DataFrame(
@@ -169,34 +180,30 @@ function result_extraction(solution, demand, inputs, input_path, results_filepat
         Grid_REShare       = value.(solution.REShare)
     )
 
-    # 8) Prepare output directory
-    outdir = dirname(results_filepath)
-    mkpath(outdir)
-
-    # 9) Write all CSVs
-    CSV.write(joinpath(outdir, "generator_results.csv"), generator)
-    CSV.write(joinpath(outdir, "ip_generator_results.csv"), ip_generators)
-    CSV.write(joinpath(outdir, "ip_heat_generator_results.csv"), ip_heat_generators)
-    CSV.write(joinpath(outdir, "ip_import_results.csv"), ip_import)
-    CSV.write(joinpath(outdir, "storage_results.csv"), storage)
-    CSV.write(joinpath(outdir, "ip_storage_results.csv"), ip_storage)
-    CSV.write(joinpath(outdir, "transmission_results.csv"), transmission)
-    CSV.write(joinpath(outdir, "nse_results.csv"), nse_r)
-    CSV.write(joinpath(outdir, "ip_nse_results.csv"), nse_r_ip)
-    CSV.write(joinpath(outdir, "cost_results.csv"), cost)
-    CSV.write(joinpath(outdir, "clean_energy_results.csv"), clean_energy)
+    # 11) Write CSVs into the scenario folder
+    CSV.write(joinpath(results_dir, "generator_results.csv"),      generator)
+    CSV.write(joinpath(results_dir, "ip_generator_results.csv"),   ip_generators)
+    CSV.write(joinpath(results_dir, "ip_heat_generator_results.csv"), ip_heat_generators)
+    CSV.write(joinpath(results_dir, "ip_import_results.csv"),      ip_import)
+    CSV.write(joinpath(results_dir, "storage_results.csv"),        storage)
+    CSV.write(joinpath(results_dir, "ip_storage_results.csv"),     ip_storage)
+    CSV.write(joinpath(results_dir, "transmission_results.csv"),   transmission)
+    CSV.write(joinpath(results_dir, "nse_results.csv"),            nse_r)
+    CSV.write(joinpath(results_dir, "ip_nse_results.csv"),         nse_r_ip)
+    CSV.write(joinpath(results_dir, "cost_results.csv"),           cost)
+    CSV.write(joinpath(results_dir, "clean_energy_results.csv"),   clean_energy)
 
     return (
-        generator_results      = generator,
-        ip_generator_results   = ip_generators,
+        generator_results        = generator,
+        ip_generator_results     = ip_generators,
         ip_heat_generator_results = ip_heat_generators,
-        ip_import_results      = ip_import,
-        storage_results        = storage,
-        ip_storage_results     = ip_storage,
-        transmission_results   = transmission,
-        nse_results            = nse_r,
-        ip_nse_results         = nse_r_ip,
-        cost_results           = cost,
-        clean_energy           = clean_energy
+        ip_import_results        = ip_import,
+        storage_results          = storage,
+        ip_storage_results       = ip_storage,
+        transmission_results     = transmission,
+        nse_results              = nse_r,
+        ip_nse_results           = nse_r_ip,
+        cost_results             = cost,
+        clean_energy             = clean_energy
     )
 end

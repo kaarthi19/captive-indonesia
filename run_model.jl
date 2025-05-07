@@ -4,28 +4,28 @@ using JuMP
 using Plots
 using DataFrames, CSV
 using Gurobi
+using Base.Filesystem: dirname, mkpath
 
-
-# Load your core modeling code
+# 1) Load your core modeling code
 include(joinpath(@__DIR__, "functions/function_compiler.jl"))
 
-# 1) Load scenario config
-cfg               = JSON.parsefile("config.json")
-island            = cfg["island"]
-year              = cfg["year"]
-scenario          = cfg["scenario"]
-clean             = cfg["clean"]
-CO235reduction    = cfg["CO235reduction"]
-BAUCO2emissions   = cfg["BAUCO2emissions"]
-CO2_limit         = cfg["CO2_limit"]
+# 2) Read config.json
+cfg              = JSON.parsefile("config.json")
+island           = cfg["island"]
+year             = cfg["year"]
+scenario         = cfg["scenario"]
+clean            = cfg["clean"]
+CO235reduction   = cfg["CO235reduction"]
+BAUCO2emissions  = cfg["BAUCO2emissions"]
+CO2_limit        = cfg["CO2_limit"]
 
-# 2) Baseline model settings
+# 3) Baseline model settings
 mipgap         = 0.01
 CO2_constraint = false
 RE_constraint  = false
 RE_limit       = 0.34
 
-# 3) Scenario toggles
+# 4) Scenario toggles
 if scenario == "base"
     Grid = false; Captive = false; ImportPrice = 59;   NoCoal = false
 elseif scenario == "gridcaptive"
@@ -42,7 +42,7 @@ else
     error("Unknown scenario: $scenario")
 end
 
-# 4) Clean‐flag overrides
+# 5) Clean‑flag overrides
 if clean == "reference"
     CO2_constraint = false
     RE_constraint  = false
@@ -53,17 +53,17 @@ else
     error("Unknown clean flag: $clean")
 end
 
-# 5) Paths
-base_dir     = @__DIR__
-inputs_path  = joinpath(base_dir, "data_indonesia", year, island)
+# 6) Build input path
+base_dir    = @__DIR__
+inputs_path = joinpath(base_dir, "data_indonesia", year, island)
 
-# Build results directory tree with per‐scenario subfolder
+# 7) Create a scenario‑specific results folder
 results_root = joinpath(base_dir, "results")
 job_name     = "$(scenario)_$(island)_$(year)_$(clean)"
 results_dir  = joinpath(results_root, job_name)
 mkpath(results_dir)
 
-# 6) Call the compiler, passing through all parameters
+# 8) Invoke the compiler, passing that folder
 function_compiler(
     inputs_path,
     results_dir,
@@ -79,4 +79,3 @@ function_compiler(
     CO235reduction,
     BAUCO2emissions
 )
-
