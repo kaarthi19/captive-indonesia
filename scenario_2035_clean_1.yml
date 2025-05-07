@@ -1,0 +1,39 @@
+# scenarios.yml
+islands:
+  - sumatera
+  - jawa_bali
+  - kalimantan
+
+
+years:
+  - "2035"
+
+scenarios:
+  - base
+  - grid
+  - gridcaptive
+  - captive
+  - nocoal
+  - highimportprice
+
+cleans:
+  - clean
+
+# per‑island baseline BAU CO₂ emissions
+island_params:
+  sumatera: 8060000
+  jawa_bali: 4460000
+  kalimantan: 11400000
+
+
+# per‑year, per‑island CO2_limit values
+co2_limits:
+  "2030":
+    sumatera: 86780000
+    jawa_bali: 116430000
+    kalimantan: 34390000
+
+  "2035":
+    sumatera: 60500000
+    jawa_bali: 81200000
+    kalimantan: 88600000
