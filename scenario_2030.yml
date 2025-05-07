@@ -31,6 +31,7 @@ island_params:
   kalimantan: 34390000
   sulawesi: 19410000
   north_maluku: 3880000
+  maluku: 5820000
   papua: 15520000
   nusa_tenggara: 7760000
 
@@ -42,6 +43,7 @@ co2_limits:
     kalimantan: 34390000
     sulawesi: 19410000
     north_maluku: 3880000
+    maluku: 5820000
     papua: 15520000
     nusa_tenggara: 7760000
   "2035":
@@ -50,5 +52,6 @@ co2_limits:
     kalimantan: 88600000
     sulawesi: 13500000
     north_maluku: 2700000
+    maluku: 4100000
     papua: 10800000
     nusa_tenggara: 5400000
