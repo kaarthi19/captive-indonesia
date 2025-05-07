@@ -132,8 +132,8 @@ function result_extraction(solution, demand, inputs, input_path, results_filepat
             sum(value.(solution.NSE)[:, s, z].data) / total_demand * 100
         ))
     end
-
-    num_ip = maximum(inputs.IP)
+    
+    #num_ip = maximum(inputs.IP)
     nse_r_ip = DataFrame(
         Segment = Int[], Zone = Int[],
         NSE_Price = Float64[],

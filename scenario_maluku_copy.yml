@@ -1,0 +1,23 @@
+# scenarios.yml
+islands:
+  - maluku
+
+years:
+  - "2030"
+
+scenarios:
+  - base
+
+cleans:
+  - reference
+
+# per‑island baseline BAU CO₂ emissions
+island_params:
+  maluku: 5820000
+
+# per‑year, per‑island CO2_limit values
+co2_limits:
+  "2030":
+    maluku: 5820000
+  "2035":
+    maluku: 4100000
