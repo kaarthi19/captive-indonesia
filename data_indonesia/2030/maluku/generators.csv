@@ -25,7 +25,7 @@
 24,1,maluku,maluku,pltmg_dobo,gas,10,0,2021,Construction,PLN,,1,730000,0,0,22500,0,2.23,10,0.3,0.2,0.2,1,24,13.7,9.75,gas,1,1,1,1,0,0,0,1,,,,
 25,1,maluku,maluku,pltbio_dobo_2,biomass,10,0,2024,Plan,IPP,,1,1820000,0,0,43800,0,2.8,10,0.3,0.1,0.1,1,0,0,0,biomass,0,0,1,1,0,0,0,1,,,,
 26,1,maluku,maluku,plts_lisdes,solar,12.6,0,2021,Plan,PLN,,1,560000,0,0,10000,0,0,12.6,0,1,1,0,0,0,0,None,0,0,1,1,0,1,0,1,,,,
-27,1,maluku,maluku,plts_dedieselisasi,solar,548 72,0,2023,Plan,IPP,,1,560000,0,0,10000,0,0,548 72,0,1,1,0,0,0,0,None,0,0,1,1,0,1,0,1,,,,
+27,1,maluku,maluku,plts_dedieselisasi,solar,548 72,0,2023,Plan,IPP,,1,560000,0,0,10000,0,0,548.72,0,1,1,0,0,0,0,None,0,0,1,1,0,1,0,1,,,,
 28,1,maluku,maluku,plts_lisdes,solar,17.26,0,2022,Plan,PLN,,1,560000,0,0,10000,0,0,17.26,0,1,1,0,0,0,0,None,0,0,1,1,0,1,0,1,,,,
 29,1,maluku,maluku,plts_lisded,solar,0.58,0,2023,Plan,PLN,,1,560000,0,0,10000,0,0,0.58,0,1,1,0,0,0,0,None,0,0,1,1,0,1,0,1,,,,
 30,1,maluku,maluku,pltmg_masela,gas,20,0,2025,Plan,PLIN,,1,730000,0,0,22500,0,2.23,20,0.3,0.2,0.2,1,24,13.7,9.75,gas,1,1,1,1,0,0,0,1,,,,
