@@ -9,10 +9,6 @@ years:
   - "2035"
 
 scenarios:
-  - base
-  - grid
-  - gridcaptive
-  - captive
   - nocoal
   - highimportprice
 

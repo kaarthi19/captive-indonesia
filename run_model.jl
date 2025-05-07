@@ -35,9 +35,9 @@ elseif scenario == "grid"
 elseif scenario == "captive"
     Grid = false; Captive = true;  ImportPrice = 59;   NoCoal = false
 elseif scenario == "highimportprice"
-    Grid = false; Captive = false; ImportPrice = 59*1.21; NoCoal = false
+    Grid = true; Captive = true; ImportPrice = 59*1.21; NoCoal = false
 elseif scenario == "nocoal"
-    Grid = false; Captive = false; ImportPrice = 59;     NoCoal = true
+    Grid = true; Captive = false; ImportPrice = 59;    NoCoal = true
 else
     error("Unknown scenario: $scenario")
 end
