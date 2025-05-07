@@ -164,6 +164,9 @@ function input_data(filepath)
             NSE_Cost = Float64[],
             NSE_Max = Float64[]
         )
+
+        IP_S = Int[]
+        IP_VOLL = 0.0
     end
 
     if isfile(joinpath(filepath, "ip_demandheat.csv"))
