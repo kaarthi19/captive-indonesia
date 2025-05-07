@@ -7,7 +7,7 @@ using Gurobi
 
 
 # Load your core modeling code
-include(joinpath(@__DIR__, "function_compiler.jl"))
+include(joinpath(@__DIR__, "functions/function_compiler.jl"))
 
 # 1) Load scenario config
 cfg               = JSON.parsefile("config.json")
@@ -55,7 +55,7 @@ end
 
 # 5) Paths
 base_dir     = @__DIR__
-inputs_path  = joinpath(base_dir, "data", island, year)
+inputs_path  = joinpath(base_dir, "data_indonesia", year, island)
 
 # Build results directory tree with per‐scenario subfolder
 results_root = joinpath(base_dir, "results")
@@ -63,13 +63,10 @@ job_name     = "$(scenario)_$(island)_$(year)_$(clean)"
 results_dir  = joinpath(results_root, job_name)
 mkpath(results_dir)
 
-# Full path to this scenario's results.csv
-results_file = joinpath(results_dir, "results.csv")
-
 # 6) Call the compiler, passing through all parameters
 function_compiler(
     inputs_path,
-    results_file,
+    results_dir,
     mipgap,
     CO2_constraint,
     CO2_limit,
