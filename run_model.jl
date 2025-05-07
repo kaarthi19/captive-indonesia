@@ -5,10 +5,11 @@ using Plots
 using DataFrames, CSV
 using Gurobi
 
-# core model logic
-include(joinpath(@__DIR__, "functions/function_compiler.jl"))
 
-# 1) load scenario config
+# Load your core modeling code
+include(joinpath(@__DIR__, "function_compiler.jl"))
+
+# 1) Load scenario config
 cfg               = JSON.parsefile("config.json")
 island            = cfg["island"]
 year              = cfg["year"]
@@ -18,13 +19,13 @@ CO235reduction    = cfg["CO235reduction"]
 BAUCO2emissions   = cfg["BAUCO2emissions"]
 CO2_limit         = cfg["CO2_limit"]
 
-# 2) baseline settings
+# 2) Baseline model settings
 mipgap         = 0.01
 CO2_constraint = false
 RE_constraint  = false
 RE_limit       = 0.34
 
-# scenario toggles
+# 3) Scenario toggles
 if scenario == "base"
     Grid = false; Captive = false; ImportPrice = 59;   NoCoal = false
 elseif scenario == "gridcaptive"
@@ -41,29 +42,34 @@ else
     error("Unknown scenario: $scenario")
 end
 
-# clean‑flag overrides
+# 4) Clean‐flag overrides
 if clean == "reference"
     CO2_constraint = false
     RE_constraint  = false
 elseif clean == "clean"
     CO2_constraint = true
     RE_constraint  = true
+else
+    error("Unknown clean flag: $clean")
 end
 
-# 3) paths
+# 5) Paths
 base_dir     = @__DIR__
-inputs_path  = joinpath(base_dir, "data_indonesia", year, island)
-results_root = joinpath(base_dir, "results")
-mkpath(results_root)
+inputs_path  = joinpath(base_dir, "data", island, year)
 
-job_name    = "$(scenario)_$(island)_$(year)_$(clean)"
-results_dir = joinpath(results_root, job_name)
+# Build results directory tree with per‐scenario subfolder
+results_root = joinpath(base_dir, "results")
+job_name     = "$(scenario)_$(island)_$(year)_$(clean)"
+results_dir  = joinpath(results_root, job_name)
 mkpath(results_dir)
 
-# 4) run compiler, passing new parameters
+# Full path to this scenario's results.csv
+results_file = joinpath(results_dir, "results.csv")
+
+# 6) Call the compiler, passing through all parameters
 function_compiler(
     inputs_path,
-    results_dir,
+    results_file,
     mipgap,
     CO2_constraint,
     CO2_limit,
@@ -76,3 +82,4 @@ function_compiler(
     CO235reduction,
     BAUCO2emissions
 )
+
