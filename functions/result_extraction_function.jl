@@ -77,6 +77,7 @@ function result_extraction(
         Resource   = inputs.ip_generators.Resource[inputs.IP_UC],
         Zone       = inputs.ip_generators.Zone[inputs.IP_UC],
         technology = inputs.ip_generators.technology[inputs.IP_UC],
+        commodity  = inputs.ip_generators.commodity[inputs.IP_UC],
         GWh        = ip_heat_generation ./ 1000
     )
 

@@ -59,7 +59,7 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
             vSOC[inputs.T, inputs.STOR]        >= 0 # energy storage state of charge (MW)
             vNSE[inputs.T, inputs.S, inputs.Z]  >= 0 # non-served energy/demand curtailment (MW)
             vFLOW[inputs.T, inputs.L]           >= 0 # transmission line flow (MW)
-            vTHETA[inputs.T, inputs.Z]          >= 0 # theta angle for transmission lines (radians)
+            # vTHETA[inputs.T, inputs.Z]          >= 0 # theta angle for transmission lines (radians)
     end)
 
     #industrial park decision variables
@@ -181,15 +181,15 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
             #total transmission capacity
             cTransCap[l in inputs.L], vT_CAP[l] == inputs.lines.Line_Max_Flow_MW[l] - vRET_T_CAP[l] + vNEW_T_CAP[l]       
             
-            #setting reference bus for transmission lines
-            cThetaRef[t in inputs.T, z in inputs.Z], vTHETA[t,1] == 0
+            # #setting reference bus for transmission lines
+            # cThetaRef[t in inputs.T, z in inputs.Z], vTHETA[t,1] == 0
             
         end);
 
-        #DC power flow constraint
-        @constraint(CE, cDCPowerFlow[t in inputs.T, l in inputs.L],
-           vFLOW[t,l] == (inputs.lines[l,:B] / inputs.lines[l,:distance_km]) * sum(inputs.lines[l,Symbol(string("z",i))] * vTHETA[t,i] for i in inputs.Z)
-        );
+        # #DC power flow constraint
+        # @constraint(CE, cDCPowerFlow[t in inputs.T, l in inputs.L],
+        #    vFLOW[t,l] == (inputs.lines[l,:B] / inputs.lines[l,:distance_km]) * sum(inputs.lines[l,Symbol(string("z",i))] * vTHETA[t,i] for i in inputs.Z)
+        # );
 
     # ramp, min up, min down, and storage constraints
     @constraints(CE, begin
@@ -645,7 +645,7 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
         );
     end
     @expression(CE, eCostObjective,
-    eFixedCostsGeneration + eFixedCostsIPGeneration + 
+    eFixedCostsGeneration + eFixedCostsIPGeneration + eFixedCostsStorage +
     eFixedCostsTransmission + eGridImportCosts +
     eVariableCostsGrid + eVariableCostsIPED + eVariableCostsIPUC +
     eNSECosts + eIPNSECosts + eIPNSEHeatCosts + 
