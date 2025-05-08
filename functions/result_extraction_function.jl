@@ -106,14 +106,26 @@ function result_extraction(
         Change_in_Storage_MWh = value.(solution.E_CAP).data .- inputs.generators.Existing_Cap_MW[inputs.STOR],
     )
 
-    ip_storage = DataFrame(
-        ID                    = inputs.IP_STOR,
-        Zone                  = inputs.ip_generators.Zone[inputs.IP_STOR],
-        Resource              = inputs.ip_generators.Resource[inputs.IP_STOR],
-        Total_Storage_MWh     = value.(solution.IP_E_CAP).data,
-        Start_Storage_MWh     = inputs.ip_generators.Existing_Cap_MW[inputs.IP_STOR],
-        Change_in_Storage_MWh = value.(solution.IP_E_CAP).data .- inputs.ip_generators.Existing_Cap_MW[inputs.IP_STOR],
-    )
+    if solution.IP_E_CAP isa AbstractArray
+        ip_storage = DataFrame(
+            ID                    = inputs.IP_STOR,
+            Zone                  = inputs.ip_generators.Zone[inputs.IP_STOR],
+            Resource              = inputs.ip_generators.Resource[inputs.IP_STOR],
+            Total_Storage_MWh     = value.(solution.IP_E_CAP),
+            Start_Storage_MWh     = inputs.ip_generators.Existing_Cap_MW[inputs.IP_STOR],
+            Change_in_Storage_MWh = value.(solution.IP_E_CAP) .- inputs.ip_generators.Existing_Cap_MW[inputs.IP_STOR],
+        )
+    else
+        @warn "solution.IP_E_CAP is not a JuMP container. Filling with zeros."
+        ip_storage = DataFrame(
+            ID                    = inputs.IP_STOR,
+            Zone                  = inputs.ip_generators.Zone[inputs.IP_STOR],
+            Resource              = inputs.ip_generators.Resource[inputs.IP_STOR],
+            Total_Storage_MWh     = zeros(length(inputs.IP_STOR)),
+            Start_Storage_MWh     = inputs.ip_generators.Existing_Cap_MW[inputs.IP_STOR],
+            Change_in_Storage_MWh = -inputs.ip_generators.Existing_Cap_MW[inputs.IP_STOR],
+        )
+    end
 
     transmission = DataFrame(
         ID                       = inputs.L,
