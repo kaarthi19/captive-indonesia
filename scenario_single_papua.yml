@@ -1,0 +1,29 @@
+# scenarios.yml
+islands:
+  - papua
+
+years:
+  - "2035"
+
+scenarios:
+  - base
+  - grid
+  - gridcaptive
+  - captive
+  - highimportprice
+  - nocoal
+
+cleans:
+  - reference
+
+# per‑island baseline BAU CO₂ emissions
+island_params:
+  papua: 15520000
+
+# per‑year, per‑island CO2_limit values
+co2_limits:
+  "2030":
+    papua: 15520000
+
+  "2035":
+    papua: 10800000
