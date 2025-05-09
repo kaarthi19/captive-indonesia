@@ -6,7 +6,7 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
     set_attribute(CE, "Crossover", 0)
     #set_attribute(CE, "UnboundedRay", 1)
     #set_attribute(CE, "Nodes", 10)
-    set_attribute(CE, "TimeLimit", 1*24*60*60)
+    set_attribute(CE, "TimeLimit", 3*24*60*60)
     #set_attribute(CE, "Heuristics", 0)
     #set_attribute(CE, "Cuts", 3)
 

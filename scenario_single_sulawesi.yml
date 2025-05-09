@@ -1,6 +1,7 @@
+
 # scenarios.yml
 islands:
-  - papua
+  - sulawesi
 
 years:
   - "2035"
@@ -18,12 +19,12 @@ cleans:
 
 # per‑island baseline BAU CO₂ emissions
 island_params:
-  papua: 15520000
+  sulawesi: 15520000
 
 # per‑year, per‑island CO2_limit values
 co2_limits:
   "2030":
-    papua: 15520000
+    sulawesi: 19410000
 
   "2035":
-    papua: 10800000
+    sulawesi: 13500000
