@@ -1,0 +1,30 @@
+
+# scenarios.yml
+islands:
+  - north_maluku
+
+years:
+  - "2035"
+
+scenarios:
+  - base
+  - grid
+  - gridcaptive
+  - captive
+  - highimportprice
+  - nocoal
+
+cleans:
+  - reference
+
+# per‑island baseline BAU CO₂ emissions
+island_params:
+  north_maluku: 25851699
+
+# per‑year, per‑island CO2_limit values
+co2_limits:
+  "2030":
+    north_maluku: 3880000
+
+  "2035":
+    north_maluku: 2700000
