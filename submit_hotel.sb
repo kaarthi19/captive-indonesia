@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+#SBATCH -J model            #change this for job name
+#SBATCH -q hotel            #partition name
+#SBATCH -p hotel            #QOS name
+#SBATCH -N 1                #number of nodes
+#SBATCH -n 1                #number of tasks
+#SBATCH -c 36               #number of cpus per task
+#SBATCH -t 2-02:59:00       #wall time limit
+#SBATCH -o model-%j.out-%N  #output file
+#SBATCH -e model-%j.err-%N  #error file
+#SBATCH --exclude tscc-13-[9-12] #excludes specific nodes that cannot run julia
+#SBATCH -A htl198           #allocation name, always csd769
+#SBATCH --mail-type END     #send mail when job ends
+#SBATCH --mail-user <kagnapathy@ucsd.edu> #send mail to this address
+
+# absolute path to your project root:
+PROJECT_ROOT=/tscc/nfs/home/kagnapathy/captive-indonesia
+
+# invoke Julia on the absolute run_model.jl, giving it the local config.json
+julia $PROJECT_ROOT/run_model.jl config.json
+
+exit 0

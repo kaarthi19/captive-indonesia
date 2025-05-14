@@ -576,6 +576,14 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
         #investment costs for new storage energy capacity
         sum(inputs.generators.Inv_Cost_per_MWhyr[g]*vNEW_E_CAP[g] for g in intersect(inputs.STOR, inputs.NEW))
         );
+
+    #fixed cost for storage
+    @expression(CE, eIPFixedCostsStorage,
+        #fixed costs for total storage capacity
+        sum(inputs.ip_generators.Fixed_OM_Cost_per_MWhyr[g]*vIP_E_CAP[g] for g in inputs.IP_STOR) + 
+        #investment costs for new storage energy capacity
+        sum(inputs.ip_generators.Inv_Cost_per_MWhyr[g]*vIP_NEW_E_CAP[g] for g in intersect(inputs.IP_STOR, inputs.IP_NEW))
+        );
     
     #fixed cost for transmission
     @expression(CE, eFixedCostsTransmission,
@@ -602,7 +610,6 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
         sum(inputs.sample_weight[t]*inputs.ip_generators.Var_Cost[g]*(vIP_GEN[t,g] + vIP_GEN_HEAT[t,g]) for t in inputs.T, g in inputs.IP_UC)
         );
 
-        
     #NSE costs for grid
     @expression(CE, eNSECosts,
      # Non-served energy costs, weighted by hourly sample weight to ensure non-served energy costs estimate annual costs
@@ -645,7 +652,8 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
         );
     end
     @expression(CE, eCostObjective,
-    eFixedCostsGeneration + eFixedCostsIPGeneration + eFixedCostsStorage +
+    eFixedCostsGeneration + eFixedCostsIPGeneration + 
+    eFixedCostsStorage + eIPFixedCostsStorage +
     eFixedCostsTransmission + eGridImportCosts +
     eVariableCostsGrid + eVariableCostsIPED + eVariableCostsIPUC +
     eNSECosts + eIPNSECosts + eIPNSEHeatCosts + 

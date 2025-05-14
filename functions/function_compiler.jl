@@ -2,6 +2,7 @@
 include("input_data.jl")
 include("optimizer.jl")
 include("result_extraction_function.jl")
+include("benders_decomposition.jl")
 
 function function_compiler(
         filepath::AbstractString,
@@ -22,7 +23,7 @@ function function_compiler(
     inputs = input_data(filepath)
 
     # 2) Run the optimization
-    solution = capacity_expansion(
+    solution = capacity_expansion_benders(
         inputs,
         mipgap,
         CO2_constraint,
