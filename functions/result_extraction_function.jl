@@ -61,6 +61,7 @@ function result_extraction(
         ID                   = inputs.IP_G,
         Resource             = inputs.ip_generators.Resource[inputs.IP_G],
         Zone                 = inputs.ip_generators.Zone[inputs.IP_G],
+        Industrial_Park      = inputs.ip_generators.Industrial_Park[inputs.IP_G],
         technology           = inputs.ip_generators.technology[inputs.IP_G],
         Total_MW             = value.(solution.IP_CAP).data,
         Start_MW             = inputs.ip_generators.Existing_Cap_MW[inputs.IP_G],
@@ -73,12 +74,13 @@ function result_extraction(
     )
 
     ip_heat_generators = DataFrame(
-        ID         = inputs.IP_UC,
-        Resource   = inputs.ip_generators.Resource[inputs.IP_UC],
-        Zone       = inputs.ip_generators.Zone[inputs.IP_UC],
-        technology = inputs.ip_generators.technology[inputs.IP_UC],
-        commodity  = inputs.ip_generators.commodity[inputs.IP_UC],
-        GWh        = ip_heat_generation ./ 1000
+        ID                  = inputs.IP_UC,
+        Resource            = inputs.ip_generators.Resource[inputs.IP_UC],
+        Zone                = inputs.ip_generators.Zone[inputs.IP_UC],
+        Industrial_Park     = inputs.ip_generators.Industrial_Park[inputs.IP_UC],
+        technology          = inputs.ip_generators.technology[inputs.IP_UC],
+        commodity           = inputs.ip_generators.commodity[inputs.IP_UC],
+        GWh                 = ip_heat_generation ./ 1000
     )
 
     if all(value.(solution.IP_IMPORT) .== 0)
@@ -116,6 +118,7 @@ function result_extraction(
             ip_storage = DataFrame(
                 ID                    = inputs.IP_STOR,
                 Zone                  = inputs.ip_generators.Zone[inputs.IP_STOR],
+                Industrial_Park       = inputs.ip_generators.Industrial_Park[inputs.IP_STOR],
                 Resource              = inputs.ip_generators.Resource[inputs.IP_STOR],
                 Total_Storage_MWh     = total_storage,
                 Start_Storage_MWh     = start_storage,
