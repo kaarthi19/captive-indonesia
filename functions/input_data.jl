@@ -268,6 +268,9 @@ function input_data(filepath)
     # subset of IP generators that are not subject to unit commitment constraints
     IP_ED = intersect(ip_generators.R_ID[ip_generators.Commit.==0], IP_G)
 
+    # subset of IP generators that are RE + storage
+    IP_RE = intersect(ip_generators.R_ID[.!(ip_generators.Commit.==1)], IP_G)
+
     # subset of new IP generators
     IP_NEW = intersect(ip_generators.R_ID[ip_generators.New_Build.==1], IP_G)
 
@@ -327,6 +330,7 @@ function input_data(filepath)
         IP_ED = IP_ED,
         IP_NEW = IP_NEW,
         IP_OLD = IP_OLD,
+        IP_RE = IP_RE,
         IP = IP,
         IP_G = IP_G,
         IP_S = IP_S,
