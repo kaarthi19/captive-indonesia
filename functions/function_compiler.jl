@@ -23,7 +23,7 @@ function function_compiler(
     inputs = input_data(filepath)
 
     # 2) Run the optimization
-    solution = capacity_expansion_benders(
+    solution = capacity_expansion(
         inputs,
         mipgap,
         CO2_constraint,
