@@ -307,7 +307,7 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
                 sum(vIP_GEN[t,g] for g in intersect(inputs.ip_generators[inputs.ip_generators.Industrial_Park.==ip,:R_ID],union(inputs.IP_ED, inputs.STOR))) +
                 sum(vIP_IMPORT[t,ip]) +
                 sum(vIP_NSE[t,s,ip] for s in inputs.IP_S) - 
-                sum(vIP_CHARGE[t,g] for g in intersect(inputs.ip_generators[inputs.ip_generators.Zone.==z,:R_ID],inputs.IP_STOR)) -
+                sum(vCHARGE[t,g] for g in intersect(inputs.generators[inputs.ip_generators.Industrial_Park.==ip,:R_ID],inputs.IP_STOR)) -
                 # include export variable here -
                 inputs.ip_demand[t,ip] == 0
             end);
@@ -318,7 +318,7 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
                 sum(vIP_GEN[t,g] for g in intersect(inputs.ip_generators[inputs.ip_generators.Industrial_Park.==ip,:R_ID],inputs.IP_G)) +
                 sum(vIP_IMPORT[t,ip]) +
                 sum(vIP_NSE[t,s,ip] for s in inputs.IP_S) -
-                sum(vCHARGE[t,g] for g in intersect(inputs.generators[inputs.generators.Zone.==z,:R_ID],inputs.STOR)) -
+                sum(vCHARGE[t,g] for g in intersect(inputs.generators[inputs.ip_generators.Industrial_Park.==ip,:R_ID],inputs.IP_STOR)) -
                 # include export variable here -
                 inputs.ip_demand[t,ip] == 0
             end);
@@ -339,7 +339,7 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
                 cIPElectricityBalance[t in inputs.T, ip in inputs.IP], 
                 sum(vIP_GEN[t,g] for g in intersect(inputs.ip_generators[inputs.ip_generators.Industrial_Park.==ip,:R_ID],union(inputs.IP_ED, inputs.STOR))) +
                 sum(vIP_NSE[t,s,ip] for s in inputs.IP_S) -
-                sum(vCHARGE[t,g] for g in intersect(inputs.generators[inputs.generators.Zone.==z,:R_ID],inputs.STOR)) -
+                sum(vCHARGE[t,g] for g in intersect(inputs.ip_generators[inputs.ip_generators.Industrial_Park.==ip,:R_ID],inputs.IP_STOR)) -
                 # include export variable here -
                 inputs.ip_demand[t,ip] == 0
             end);
@@ -349,7 +349,7 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
                 cIPElectricityBalance[t in inputs.T, ip in inputs.IP], 
                 sum(vIP_GEN[t,g] for g in intersect(inputs.ip_generators[inputs.ip_generators.Industrial_Park.==ip,:R_ID],inputs.IP_G)) +
                 sum(vIP_NSE[t,s,ip] for s in inputs.IP_S) -
-                sum(vCHARGE[t,g] for g in intersect(inputs.generators[inputs.generators.Zone.==z,:R_ID],inputs.STOR)) -
+                sum(vCHARGE[t,g] for g in intersect(inputs.generators[inputs.ip_generators.Industrial_Park.==ip,:R_ID],inputs.IP_STOR)) -
                 # include export variable here -
                 inputs.ip_demand[t,ip] == 0
             end);
