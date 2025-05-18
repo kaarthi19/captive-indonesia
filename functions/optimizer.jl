@@ -384,6 +384,12 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
             cIPUcNew[g in inputs.IP_UC_NEW], 
                 vIP_CAP[g] == vIP_NEW_CAP_UC[g]
 
+            #max charge constraint
+            cIPMaxCharge[t in inputs.T, g in inputs.IP_STOR], vIP_CHARGE[t,g] <= vIP_CAP[g]
+            
+            #max state of charge constraint
+            cIPMaxSOC[t in inputs.T, g in inputs.IP_STOR], vIP_SOC[t,g] <= vIP_E_CAP[g]
+
             #total energy storage capacity for existing units
             cIPCapEnergyOld[g in intersect(inputs.IP_STOR, inputs.IP_OLD)], 
                 vIP_E_CAP[g] == inputs.ip_generators.Existing_Cap_MWh[g] - vIP_RET_E_CAP[g]
