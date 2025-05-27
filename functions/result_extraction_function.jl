@@ -191,14 +191,40 @@ function result_extraction(
         ))
     end
 
+    nse_heat_ip = DataFrame(
+        Segment               = Int[],
+        Zone                  = Int[],
+        NSE_Price             = Float64[],
+        Max_NSE_MW            = Float64[],
+        Total_NSE_MWh         = Float64[],
+        NSE_Percent_of_Demand = Float64[]
+    )
+    for s in inputs.S, ip in inputs.IP
+        push!(nse_heat_ip, (
+            s,
+            ip,
+            inputs.nse.NSE_Cost[s],
+            maximum(value.(solution.IP_NSE_HEAT)[:, s, ip].data),
+            sum(value.(solution.IP_NSE_HEAT)[:, s, ip].data),
+            sum(value.(solution.IP_NSE_HEAT)[:, s, ip].data) / total_demand * 100
+        ))
+    end
+
     cost = DataFrame(
         Total_Costs              = solution.cost / 1e6,
         Fixed_Costs_Generation   = value.(solution.FixedCostsGeneration) / 1e6,
         Fixed_Costs_Transmission = value.(solution.FixedCostsTransmission) / 1e6,
+        Fixed_Costs_Storage      = value.(solution.FixedCostsStorage) / 1e6,
+        Fixed_Costs_IP           = value.(solution.FixedCostsIP) / 1e6,
         Variable_Costs_Grid      = value.(solution.VariableCostsGrid) / 1e6,
         Variable_Costs_IP        = value.(solution.VariableCostsIP) / 1e6,
         NSE_Costs                = value.(solution.NSECosts) / 1e6,
-        Grid_Import_Costs        = value.(solution.GridImportCosts) / 1e6
+        IPNSECosts               = value.(solution.IPNSECosts) / 1e6,
+        IPNSEHeatCosts           = value.(solution.IPNSEHeatCosts) / 1e6,
+        Grid_Import_Costs        = value.(solution.GridImportCosts) / 1e6,
+        StartCostsGrid           = value.(solution.StartCostsGrid) / 1e6,
+        StartCostsIP             = value.(solution.StartCostsIP) / 1e6
+
     )
 
     clean_energy = DataFrame(
@@ -231,6 +257,7 @@ function result_extraction(
         transmission_results     = transmission,
         nse_results              = nse_r,
         ip_nse_results           = nse_r_ip,
+        ip_nse_heat_results      = nse_heat_ip,
         cost_results             = cost,
         clean_energy             = clean_energy
     )
