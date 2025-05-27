@@ -245,6 +245,7 @@ function result_extraction(
     CSV.write(joinpath(results_dir, "transmission_results.csv"),   transmission)
     CSV.write(joinpath(results_dir, "nse_results.csv"),            nse_r)
     CSV.write(joinpath(results_dir, "ip_nse_results.csv"),         nse_r_ip)
+    CSV.write(joinpath(results_dir, "ip_nse_heat_results.csv"),    nse_heat_ip)
     CSV.write(joinpath(results_dir, "cost_results.csv"),           cost)
     CSV.write(joinpath(results_dir, "clean_energy_results.csv"),   clean_energy)
 
