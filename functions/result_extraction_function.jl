@@ -216,7 +216,7 @@ function result_extraction(
         Fixed_Costs_Transmission = value.(solution.FixedCostsTransmission) / 1e6,
         Fixed_Costs_Storage      = value.(solution.FixedCostsStorage) / 1e6,
         Fixed_Costs_IP           = value.(solution.FixedCostsIPGeneration) / 1e6,
-        Fixed_Costs_IP_Storage   = value.(solution.IPFixedCostsStorage) / 1e6,
+        Fixed_Costs_IP_Storage   = value.(solution.FixedCostsIPStorage) / 1e6,
         Variable_Costs_Grid      = value.(solution.VariableCostsGrid) / 1e6,
         Variable_Costs_IP        = value.(solution.VariableCostsIP) / 1e6,
         NSE_Costs                = value.(solution.NSECosts) / 1e6,
