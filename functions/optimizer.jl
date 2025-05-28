@@ -98,13 +98,13 @@ function capacity_expansion(inputs, mipgap, CO2_constraint, CO2_limit, RE_constr
         end)
     end
 
-    for g in inputs.IP_UC_NEW[inputs.ip_generators[inputs.IP_UC_NEW, :Max_Cap_MW].>0]
-        set_upper_bound(vIP_NEW_CAP_UC[g], inputs.ip_generators.Max_Cap_MW[g])
-    end
+    # for g in inputs.IP_UC_NEW[inputs.ip_generators[inputs.IP_UC_NEW, :Max_Cap_MW].>0]
+    #     set_upper_bound(vIP_NEW_CAP_UC[g], inputs.ip_generators.Max_Cap_MW[g])
+    # end
 
-    for g in inputs.IP_ED_NEW[inputs.ip_generators[inputs.ED_NEW, :Max_Cap_MW].>0]
-        set_upper_bound(vIP_NEW_CAP_ED[g], inputs.ip_generators.Max_Cap_MW[g])
-    end
+    # for g in inputs.IP_ED_NEW[inputs.ip_generators[inputs.ED_NEW, :Max_Cap_MW].>0]
+    #     set_upper_bound(vIP_NEW_CAP_ED[g], inputs.ip_generators.Max_Cap_MW[g])
+    # end
 
     for g in intersect(inputs.IP_STOR, inputs.IP_NEW)
         set_upper_bound(vIP_NEW_E_CAP[g], 208.0)
